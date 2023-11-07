@@ -25,7 +25,8 @@
         "ASPNETCORE_URLS": "https://+:443;http://+:80"
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": true,
+      "DockerfileRunArguments": "--net vroemnet --ip 172.10.0.10"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
@@ -34,7 +35,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:5504",
-      "sslPort": 44357
+      "sslPort": 0
     }
   }
 }
