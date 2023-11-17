@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  backend-main:
-    image: ${DOCKER_REGISTRY-}backendmain
-    build:
-      context: .
-      dockerfile: backend-main/Dockerfile

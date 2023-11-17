@@ -1,7 +1,8 @@
-using backend_main.Models;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using backend_main.Models;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace backend_main.Controllers
 {
@@ -10,15 +11,15 @@ namespace backend_main.Controllers
 	public class MainController : ControllerBase
 	{
 		private readonly ILogger<MainController> _logger;
+
 		private HttpClient _httpClient;
-		private readonly string _baseUrl = "https://172.10.0.20:443";
+		private readonly string _baseUrl = "https://";
 
 		public MainController(ILogger<MainController> logger)
 		{
 			_logger = logger;
 
 			var httpClientHandler = new HttpClientHandler();
-			// Return `true` to allow certificates that are untrusted/invalid
 			httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
 			_httpClient = new HttpClient(httpClientHandler);
@@ -31,8 +32,6 @@ namespace backend_main.Controllers
 			var request = await _httpClient.PostAsJsonAsync($"{_baseUrl}/Auth/Authenticate", data).WaitAsync(CancellationToken.None);
 			string? response = request.Content.ToString();
 
-			// Create requests and response classes. Remove them from auth backend?
-
 			string? result;
 			if (response == null)
 				result = "Je bent niet ingelogd!";
@@ -41,5 +40,5 @@ namespace backend_main.Controllers
 
 			return result;
 		}
-	};
+	}
 }
