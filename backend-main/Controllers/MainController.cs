@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using backend_main.Models;
 using Newtonsoft.Json;
+using backend_main.Models.Responses;
 
 namespace backend_main.Controllers
 {
@@ -13,7 +14,7 @@ namespace backend_main.Controllers
 		private readonly ILogger<MainController> _logger;
 
 		private HttpClient _httpClient;
-		private readonly string _baseUrl = "https://";
+		private readonly string _baseUrl = "https://localhost:444";
 
 		public MainController(ILogger<MainController> logger)
 		{
@@ -30,15 +31,12 @@ namespace backend_main.Controllers
 		async public Task<string> GetData(User data)
 		{
 			var request = await _httpClient.PostAsJsonAsync($"{_baseUrl}/Auth/Authenticate", data).WaitAsync(CancellationToken.None);
-			string? response = request.Content.ToString();
+			var response = request.Content.ReadFromJsonAsync<UserResponse>();
 
-			string? result;
-			if (response == null)
-				result = "Je bent niet ingelogd!";
-			else
-				result = JsonConvert.SerializeObject(new User());
+			UserResponse? result = response.Result;
+			result = response.Result;
 
-			return result;
+			return JsonConvert.SerializeObject(result);
 		}
 	}
 }
