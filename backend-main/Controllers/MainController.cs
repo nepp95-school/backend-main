@@ -4,6 +4,7 @@ using System;
 using backend_main.Models;
 using Newtonsoft.Json;
 using backend_main.Models.Responses;
+using backend_main.Interfaces;
 
 namespace backend_main.Controllers
 {
@@ -15,8 +16,9 @@ namespace backend_main.Controllers
 
 		private HttpClient _httpClient;
 		private readonly string _baseUrl = "https://localhost:444";
+		private readonly IArticleService _articleService;
 
-		public MainController(ILogger<MainController> logger)
+		public MainController(ILogger<MainController> logger, IArticleService articleService)
 		{
 			_logger = logger;
 
@@ -24,6 +26,19 @@ namespace backend_main.Controllers
 			httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
 			_httpClient = new HttpClient(httpClientHandler);
+
+			_articleService = articleService;
+		}
+
+		[HttpGet]
+		[Route("GetArticles")]
+		public List<ArticleResponse> GetArticles()
+		{
+			List<Article> result = _articleService.GetArticles();
+
+			return result
+					.Select(x => new ArticleResponse(x.Id, x.Name, x.Description, x.Price))
+					.ToList();
 		}
 
 		[HttpPost]
